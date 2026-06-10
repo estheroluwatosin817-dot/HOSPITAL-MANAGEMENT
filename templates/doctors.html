@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Doctor & Staff Management</h2>
+    <p>Add clinical profiles and manage the active specialist team.</p>
+  </div>
+  <div class="grid-two">
+    <form method="post" class="panel form-panel">
+      <h3>Add Doctor Profile</h3>
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" name="name" required />
+      </div>
+      <div class="form-group">
+        <label>Specialization *</label>
+        <input type="text" name="specialization" list="specializations" placeholder="Select or type specialty" required />
+        <datalist id="specializations">
+          {% for department in departments %}
+          <option value="{{ department }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" name="phone" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" />
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" name="active" id="active" checked />
+        <label for="active">Active provider</label>
+      </div>
+      <button type="submit" class="button primary full-width">Add Doctor</button>
+    </form>
+
+    <div class="panel">
+      <h3>Active Team</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Phone</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doctor in doctors %}
+          <tr>
+            <td>{{ doctor.name }}</td>
+            <td>{{ doctor.specialization }}</td>
+            <td>{{ doctor.phone or '—' }}</td>
+            <td>{% if doctor.active %}Active{% else %}Inactive{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

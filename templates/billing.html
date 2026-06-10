@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Billing & Service Tracking</h2>
+    <p>Record fees for each patient and review recent service payments.</p>
+  </div>
+  <div class="grid-two">
+    <form method="post" class="panel form-panel">
+      <h3>Add Billing Entry</h3>
+      <div class="form-group">
+        <label>Patient *</label>
+        <select name="patient_id" required>
+          <option value="">Select patient</option>
+          {% for patient in patients %}
+          <option value="{{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Service *</label>
+        <input type="text" name="service" id="service" list="service-list" placeholder="Type or select a service" required />
+        <datalist id="service-list">
+          {% for service in service_costs.keys() %}
+          <option value="{{ service }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="form-group">
+        <label>Status *</label>
+        <select name="status" required>
+          {% for status in service_statuses %}
+          <option value="{{ status }}">{{ status }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Amount (₦) *</label>
+        <input type="number" name="amount" id="amount" min="0" step="0.01" required />
+      </div>
+      <button type="button" class="button secondary full-width" id="calculateCost">Auto fill amount</button>
+      <button type="submit" class="button primary full-width">Save Billing</button>
+    </form>
+
+    <div class="panel">
+      <h3>Recent Billing Records</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bill in bills %}
+          <tr>
+            <td>{{ bill.first_name }} {{ bill.last_name }}</td>
+            <td>{{ bill.service }}</td>
+            <td>₦{{ '%.2f' | format(bill.amount) }}</td>
+            <td>
+              <select onchange="window.location.href='/update-bill-status/{{ bill.id }}/' + this.value" class="status-select">
+                <option value="PAID" {% if bill.status == 'PAID' %}selected{% endif %}>PAID</option>
+                <option value="PENDING" {% if bill.status == 'PENDING' %}selected{% endif %}>PENDING</option>
+                <option value="PARTIAL" {% if bill.status == 'PARTIAL' %}selected{% endif %}>PARTIAL</option>
+              </select>
+            </td>
+            <td>{{ bill.created_at }}</td>
+            <td>
+              {% if bill.status == 'PAID' %}
+              <a href="{{ url_for('receipt', bill_id=bill.id) }}" class="button secondary small-button">Receipt</a>
+              {% else %}
+              <span class="muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

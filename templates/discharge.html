@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Discharged Patient Archive</h2>
+    <p>Review patients who have been discharged and archived from the active list.</p>
+  </div>
+  <div class="panel">
+    {% if discharged %}
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Admitted</th>
+          <th>Condition</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in discharged %}
+        <tr>
+          <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+          <td>{{ patient.phone }}</td>
+          <td>{{ patient.admitted_at }}</td>
+          <td>{{ patient.condition or 'N/A' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No archived discharges yet.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

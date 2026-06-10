@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-panel">
+  <div class="hero-copy">
+    <span class="eyebrow">Welcome to Kiitan's Health Care</span>
+    <h2>Your hospital administration system with smart patient tracking.</h2>
+    <p>
+      Register patients, schedule doctors, prioritize emergencies, generate medical reports,
+      calculate billing, and archive discharge records in one polished dashboard.
+    </p>
+    <div class="hero-actions">
+      <a href="/patients" class="button primary">Register a Patient</a>
+      <a href="/appointments" class="button secondary">Schedule Appointment</a>
+    </div>
+  </div>
+  <div class="hero-cards">
+    <article class="feature-card">
+      <h3>Active Patients</h3>
+      <p>{{ stats.active_patients }} currently admitted and being monitored.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Doctor Team</h3>
+      <p>{{ stats.doctor_count }} active specialists ready to receive appointments.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Emergency Cases</h3>
+      <p>{{ stats.emergency_cases }} emergency patients prioritized in the queue.</p>
+    </article>
+    <article class="feature-card">
+      <h3>Upcoming Visits</h3>
+      <p>{{ stats.upcoming_appointments }} appointments scheduled for the next few hours.</p>
+    </article>
+  </div>
+</section>
+
+<section class="section-block">
+  <div class="panel">
+    <h3>Recent Admissions</h3>
+    <ul class="list-highlight">
+      {% for patient in stats.recent_patients %}
+      <li>
+        {{ patient.first_name }} {{ patient.last_name }} • Admitted {{ patient.admitted_at }}
+        {% if patient.emergency %}<strong class="badge danger">Emergency</strong>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Schedule Appointments</h2>
+    <p>Assign doctors, departments, and appointment times for admitted patients.</p>
+  </div>
+  <div class="grid-two">
+    <form method="post" class="panel form-panel">
+      <h3>Create Appointment</h3>
+      <div class="form-group">
+        <label>Patient *</label>
+        <select name="patient_id" required>
+          <option value="">Choose patient</option>
+          {% for patient in patients %}
+          <option value="{{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Doctor *</label>
+        <select name="doctor_id" required>
+          <option value="">Choose doctor</option>
+          {% for doctor in doctors %}
+          <option value="{{ doctor.id }}">{{ doctor.name }} ({{ doctor.specialization }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Department *</label>
+        <input type="text" name="department" list="departments" placeholder="Select or type department" required />
+        <datalist id="departments">
+          {% for department in departments %}
+          <option value="{{ department }}"></option>
+          {% endfor %}
+        </datalist>
+      </div>
+      <div class="form-group">
+        <label>Appointment Time *</label>
+        <input type="datetime-local" name="appointment_time" required />
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea name="notes"></textarea>
+      </div>
+      <button type="submit" class="button primary full-width">Schedule</button>
+    </form>
+
+    <div class="panel">
+      <h3>Upcoming Appointments</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Department</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in scheduled %}
+          <tr>
+            <td>{{ appointment.first_name }} {{ appointment.last_name }}</td>
+            <td>{{ appointment.doctor_name }}</td>
+            <td>{{ appointment.department }}</td>
+            <td>{{ appointment.appointment_time }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

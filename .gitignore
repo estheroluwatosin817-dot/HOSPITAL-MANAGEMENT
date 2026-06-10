@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+hospital.db
+.env
+.vscode/

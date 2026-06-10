@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Medical History Report</h2>
+    <p>Detailed summary for {{ patient.first_name }} {{ patient.last_name }}.</p>
+  </div>
+  <div class="panel">
+    <div class="report-summary">
+      <div>
+        <strong>Patient:</strong> {{ patient.first_name }} {{ patient.last_name }}
+      </div>
+      <div><strong>Age:</strong> {{ patient.age }}</div>
+      <div><strong>Phone:</strong> {{ patient.phone }}</div>
+      <div><strong>Condition:</strong> {{ patient.condition or 'N/A' }}</div>
+    </div>
+  </div>
+
+  <div class="grid-two">
+    <div class="panel">
+      <h3>Appointment History</h3>
+      {% if appointments %}
+      <ul class="list-highlight">
+        {% for appointment in appointments %}
+        <li>
+          <strong>{{ appointment.appointment_time }}</strong> • Dr. {{ appointment.doctor }}
+          ({{ appointment.department }})
+          {% if appointment.notes %}<div class="small-text">{{ appointment.notes }}</div>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No appointments scheduled yet.</p>
+      {% endif %}
+    </div>
+    <div class="panel">
+      <h3>Billing History</h3>
+      {% if bills %}
+      <ul class="list-highlight">
+        {% for bill in bills %}
+        <li>
+          {{ bill.created_at }} • {{ bill.service }} • ₦{{ '%.2f' | format(bill.amount) }} •
+          <strong>{{ bill.status }}</strong>
+          {% if bill.status == 'PAID' %}
+          <a href="{{ url_for('receipt', bill_id=bill.id) }}" class="button secondary small-button">Receipt</a>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No billing records yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="panel report-actions">
+    <a href="/billing" class="button secondary">Add Billing</a>
+    <a href="/appointments" class="button secondary">Schedule Appointment</a>
+    <a href="/discharge/{{ patient.id }}" class="button danger">Discharge Patient</a>
+  </div>
+</section>
+{% endblock %}

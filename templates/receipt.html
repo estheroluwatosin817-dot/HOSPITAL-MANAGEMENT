@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Receipt</h2>
+    <p>Billing receipt for {{ bill.first_name }} {{ bill.last_name }}.</p>
+  </div>
+  <div class="panel receipt-panel">
+    <div class="receipt-header">
+      <div>
+        <h3>Kiitan's Health Care</h3>
+        <p>Official billing receipt</p>
+      </div>
+      <div>
+        <span class="badge">{{ bill.status }}</span>
+      </div>
+    </div>
+    <div class="receipt-details">
+      <div><strong>Receipt ID:</strong> {{ bill.id }}</div>
+      <div><strong>Date:</strong> {{ bill.created_at }}</div>
+      <div><strong>Patient:</strong> {{ bill.first_name }} {{ bill.last_name }}</div>
+      <div><strong>Phone:</strong> {{ bill.phone or 'N/A' }}</div>
+      <div><strong>Email:</strong> {{ bill.email or 'N/A' }}</div>
+      <div><strong>Address:</strong> {{ bill.address or 'N/A' }}</div>
+    </div>
+    <div class="receipt-services">
+      <div class="service-line">
+        <span>Service</span>
+        <span>{{ bill.service }}</span>
+      </div>
+      <div class="service-line">
+        <span>Amount</span>
+        <span>₦{{ '%.2f' | format(bill.amount) }}</span>
+      </div>
+    </div>
+    <div class="receipt-footer">
+      <button class="button primary" onclick="window.print()">Print Receipt</button>
+      <a href="{{ url_for('billing') }}" class="button secondary">Back to Billing</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

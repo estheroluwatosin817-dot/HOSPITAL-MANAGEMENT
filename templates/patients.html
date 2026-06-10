@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section-block">
+  <div class="section-intro">
+    <h2>Patient Registration & Emergency Queue</h2>
+    <p>Register new patients, search active cases, and see who requires immediate care.</p>
+  </div>
+  <div class="panel search-panel">
+    <form method="get" class="search-form">
+      <input type="search" name="q" placeholder="Search patients by name or phone" value="{{ search_query }}" />
+      <button type="submit" class="button secondary">Search</button>
+    </form>
+    <div class="status-bar">
+      <span>Active patients: <strong>{{ patients|length }}</strong></span>
+      <span>Emergency queue: <strong>{{ emergency_queue|length }}</strong></span>
+    </div>
+  </div>
+
+  <div class="grid-two">
+    <form method="post" class="panel form-panel">
+      <h3>Register Patient</h3>
+      <div class="form-group">
+        <label>First Name *</label>
+        <input type="text" name="first_name" required />
+      </div>
+      <div class="form-group">
+        <label>Last Name *</label>
+        <input type="text" name="last_name" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Age *</label>
+          <input type="number" name="age" min="0" required />
+        </div>
+        <div class="form-group half">
+          <label>Gender *</label>
+          <select name="gender" required>
+            <option value="">Select</option>
+            <option>Female</option>
+            <option>Male</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone *</label>
+        <input type="tel" name="phone" required />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" />
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <input type="text" name="address" />
+      </div>
+      <div class="form-group">
+        <label>Medical Condition</label>
+        <textarea name="condition"></textarea>
+      </div>
+      <div class="form-group form-check">
+        <input type="checkbox" name="emergency" id="emergency" />
+        <label for="emergency">Emergency case</label>
+      </div>
+      <button type="submit" class="button primary full-width">Save Patient</button>
+    </form>
+
+    <div>
+      <div class="panel">
+        <h3>Emergency Priority Queue</h3>
+        {% if emergency_queue %}
+        <ul class="list-highlight">
+          {% for patient in emergency_queue %}
+          <li>{{ patient.first_name }} {{ patient.last_name }} • Age {{ patient.age }}</li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No current emergency admissions.</p>
+        {% endif %}
+      </div>
+      <div class="panel">
+        <h3>Admitted Patients</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Emergency</th>
+              <th>Report</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for patient in patients %}
+            <tr>
+              <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+              <td>{{ patient.phone }}</td>
+              <td>{% if patient.emergency %}Yes{% else %}No{% endif %}</td>
+              <td><a href="{{ url_for('report', patient_id=patient.id) }}">View</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
